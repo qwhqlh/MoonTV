@@ -13,7 +13,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 # ---- 第 2 阶段：构建项目 ----
-FROM node:20-alpine AS builder
+FROM node:18-alpine AS builder
 RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
@@ -35,7 +35,7 @@ RUN sed -i "/const inter = Inter({ subsets: \['latin'] });/a export const dynami
 RUN pnpm run build
 
 # ---- 第 3 阶段：生成运行时镜像 ----
-FROM node:20-alpine AS runner
+FROM node:18-alpine AS runner
 
 # 创建非 root 用户
 RUN addgroup -g 1001 -S nodejs && adduser -u 1001 -S nextjs -G nodejs
